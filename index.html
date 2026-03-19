@@ -228,7 +228,12 @@
     border: 1px solid var(--border);
   }
 
-  .badge-unplayed {
+  .badge-saga {
+    background: rgba(255, 180, 50, 0.12);
+    color: #ffcc66;
+    border: 1px solid rgba(255, 180, 50, 0.25);
+  }
+
     background: rgba(255, 80, 80, 0.1);
     color: #ff8080;
     border: 1px solid rgba(255, 80, 80, 0.2);
@@ -251,7 +256,67 @@
     margin-bottom: 0.5rem;
   }
 
-  /* Fade in animation */
+  /* Multi-select */
+  .multi-select { position: relative; min-width: 160px; }
+  .ms-trigger {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 13px;
+    padding: 6px 10px;
+    height: 34px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    transition: border-color 0.15s;
+    user-select: none;
+  }
+  .ms-trigger:hover { border-color: var(--accent); }
+  .ms-trigger.active { border-color: var(--accent); }
+  .ms-arrow { font-size: 10px; color: var(--muted); transition: transform 0.15s; }
+  .ms-trigger.active .ms-arrow { transform: rotate(180deg); }
+  .ms-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 6px 0;
+    z-index: 200;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .ms-dropdown.open { display: block; }
+  .ms-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .ms-option:hover { background: rgba(255,255,255,0.05); }
+  .ms-option input[type=checkbox] { accent-color: var(--accent); width: 13px; height: 13px; cursor: pointer; }
+  .ms-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 1px 6px;
+    margin-left: 2px;
+  }
+
+
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
@@ -301,22 +366,24 @@
   </div>
   <div class="filter-group">
     <label>Género</label>
-    <select id="genre">
-      <option value="">Todos los géneros</option>
-      <option value="Shooter">Shooter</option>
-      <option value="Acción">Acción</option>
-      <option value="Aventura">Aventura</option>
-      <option value="RPG">RPG</option>
-      <option value="Plataforma">Plataforma</option>
-      <option value="Puzzle">Puzzle</option>
-      <option value="Estrategia">Estrategia</option>
-      <option value="Narrativo">Narrativo</option>
-      <option value="Deportes">Deportes</option>
-      <option value="Sigilo">Sigilo</option>
-      <option value="Terror">Terror</option>
-      <option value="Supervivencia">Supervivencia</option>
-      <option value="Indie">Indie</option>
-    </select>
+    <div class="multi-select" id="genre-multi">
+      <div class="ms-trigger" id="genre-trigger">Todos los géneros <span class="ms-arrow">▾</span></div>
+      <div class="ms-dropdown" id="genre-dropdown">
+        <label class="ms-option"><input type="checkbox" value="Shooter"> Shooter</label>
+        <label class="ms-option"><input type="checkbox" value="Acción"> Acción</label>
+        <label class="ms-option"><input type="checkbox" value="Aventura"> Aventura</label>
+        <label class="ms-option"><input type="checkbox" value="RPG"> RPG</label>
+        <label class="ms-option"><input type="checkbox" value="Plataforma"> Plataforma</label>
+        <label class="ms-option"><input type="checkbox" value="Puzzle"> Puzzle</label>
+        <label class="ms-option"><input type="checkbox" value="Estrategia"> Estrategia</label>
+        <label class="ms-option"><input type="checkbox" value="Narrativo"> Narrativo</label>
+        <label class="ms-option"><input type="checkbox" value="Deportes"> Deportes</label>
+        <label class="ms-option"><input type="checkbox" value="Sigilo"> Sigilo</label>
+        <label class="ms-option"><input type="checkbox" value="Terror"> Terror</label>
+        <label class="ms-option"><input type="checkbox" value="Supervivencia"> Supervivencia</label>
+        <label class="ms-option"><input type="checkbox" value="Indie"> Indie</label>
+      </div>
+    </div>
   </div>
   <div class="filter-group">
     <label>Modo</label>
@@ -327,13 +394,23 @@
     </select>
   </div>
   <div class="filter-group">
-    <label>Duración (historia)</label>
-    <select id="duration">
-      <option value="">Cualquiera</option>
-      <option value="short">Corto — menos de 10hs</option>
-      <option value="medium">Medio — 10 a 20hs</option>
-      <option value="long">Largo — 20 a 50hs</option>
-      <option value="verylong">Muy largo — 50hs+</option>
+    <label>Duración</label>
+    <div class="multi-select" id="duration-multi">
+      <div class="ms-trigger" id="duration-trigger">Cualquiera <span class="ms-arrow">▾</span></div>
+      <div class="ms-dropdown" id="duration-dropdown">
+        <label class="ms-option"><input type="checkbox" value="short"> Corto — &minus;10hs</label>
+        <label class="ms-option"><input type="checkbox" value="medium"> Medio — 10 a 20hs</label>
+        <label class="ms-option"><input type="checkbox" value="long"> Largo — 20 a 50hs</label>
+        <label class="ms-option"><input type="checkbox" value="verylong"> Muy largo — 50hs+</label>
+      </div>
+    </div>
+  </div>
+  <div class="filter-group">
+    <label>Saga</label>
+    <select id="saga">
+      <option value="">Todo</option>
+      <option value="si">Sí — solo sagas</option>
+      <option value="no">No — sin saga</option>
     </select>
   </div>
   <div class="filter-group">
@@ -353,128 +430,128 @@
 
 <script>
 const games = [
-  { title: "FIFA 22", genre: ["Deportes"], mode: ["Offline", "Online"], hours: 642.6, duration: 0 },
-  { title: "EA SPORTS FC™ 25", genre: ["Deportes"], mode: ["Offline", "Online"], hours: 180.8, duration: 0 },
-  { title: "NBA 2K20", genre: ["Deportes"], mode: ["Offline", "Online"], hours: 83.4, duration: 0 },
-  { title: "NBA 2K22", genre: ["Deportes"], mode: ["Offline", "Online"], hours: 67.1, duration: 0 },
-  { title: "Assassin's Creed Origins", genre: ["Acción", "RPG"], mode: ["Offline"], hours: 38.8, duration: 30 },
-  { title: "F1 2019", genre: ["Deportes"], mode: ["Offline", "Online"], hours: 29.4, duration: 15 },
-  { title: "Rise of the Tomb Raider", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 24.4, duration: 18 },
-  { title: "STAR WARS Jedi: La Orden Caída", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 22.3, duration: 18 },
-  { title: "Celeste", genre: ["Plataforma", "Indie"], mode: ["Offline"], hours: 22.3, duration: 10 },
-  { title: "Counter-Strike 2", genre: ["Shooter"], mode: ["Online"], hours: 22.1, duration: 0 },
-  { title: "Just Cause 3", genre: ["Acción"], mode: ["Offline"], hours: 21.8, duration: 15 },
-  { title: "Ori and the Will of the Wisps", genre: ["Plataforma", "Indie"], mode: ["Offline"], hours: 21.2, duration: 12 },
-  { title: "Batman™: Arkham Origins", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 20.9, duration: 12 },
-  { title: "Batman: Arkham City GOTY", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 20.7, duration: 12 },
-  { title: "Black Mesa", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 20.5, duration: 15 },
-  { title: "Supraland", genre: ["Puzzle", "Aventura"], mode: ["Offline"], hours: 19.8, duration: 12 },
-  { title: "Mad Max", genre: ["Acción"], mode: ["Offline"], hours: 18.8, duration: 20 },
-  { title: "Far Cry® 3", genre: ["Shooter", "Acción"], mode: ["Offline"], hours: 18.4, duration: 15 },
-  { title: "Ori and the Blind Forest: DE", genre: ["Plataforma", "Indie"], mode: ["Offline"], hours: 18.3, duration: 8 },
-  { title: "Life is Strange 2", genre: ["Narrativo", "Aventura"], mode: ["Offline"], hours: 17.1, duration: 12 },
-  { title: "Life is Strange™", genre: ["Narrativo", "Aventura"], mode: ["Offline"], hours: 16.6, duration: 10 },
-  { title: "The Walking Dead", genre: ["Narrativo", "Aventura"], mode: ["Offline"], hours: 13.6, duration: 8 },
-  { title: "Frostpunk", genre: ["Estrategia", "Supervivencia"], mode: ["Offline"], hours: 12.4, duration: 15 },
-  { title: "Dishonored", genre: ["Acción", "Sigilo"], mode: ["Offline"], hours: 12.3, duration: 12 },
-  { title: "Halo: The Master Chief Collection", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 12.2, duration: 40 },
-  { title: "Battlefield™ 1", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 12, duration: 8 },
-  { title: "Batman: Arkham Asylum GOTY", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 11.6, duration: 10 },
-  { title: "Portal 2", genre: ["Puzzle"], mode: ["Offline", "Online"], hours: 11.1, duration: 8 },
-  { title: "Heavy Rain", genre: ["Narrativo"], mode: ["Offline"], hours: 10.2, duration: 10 },
-  { title: "Little Nightmares II", genre: ["Terror", "Plataforma"], mode: ["Offline"], hours: 10, duration: 7 },
-  { title: "Blacksad: Under the Skin", genre: ["Narrativo", "Aventura"], mode: ["Offline"], hours: 10, duration: 8 },
-  { title: "Cuphead", genre: ["Plataforma", "Indie"], mode: ["Offline", "Online"], hours: 9.9, duration: 10 },
-  { title: "Battlefield 4™", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 9.7, duration: 8 },
-  { title: "Mark of the Ninja: Remastered", genre: ["Sigilo", "Acción"], mode: ["Offline"], hours: 9.5, duration: 8 },
-  { title: "Shadow Tactics: Blades of the Shogun", genre: ["Sigilo", "Estrategia"], mode: ["Offline"], hours: 9.1, duration: 20 },
-  { title: "DOOM (2016)", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 9, duration: 12 },
-  { title: "Tomb Raider", genre: ["Acción", "Aventura"], mode: ["Offline", "Online"], hours: 8.7, duration: 12 },
-  { title: "STAR WARS™ Battlefront™ II", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 8.4, duration: 10 },
-  { title: "Life is Strange: Before the Storm", genre: ["Narrativo", "Aventura"], mode: ["Offline"], hours: 7.8, duration: 6 },
-  { title: "Titanfall® 2", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 7.2, duration: 6 },
-  { title: "The Sims™ 4", genre: ["Estrategia"], mode: ["Offline", "Online"], hours: 7, duration: 0 },
-  { title: "Ryse: Son of Rome", genre: ["Acción"], mode: ["Offline"], hours: 6.8, duration: 6 },
-  { title: "Mirror's Edge", genre: ["Acción", "Plataforma"], mode: ["Offline"], hours: 6.4, duration: 6 },
-  { title: "Bastion", genre: ["Acción", "RPG", "Indie"], mode: ["Offline"], hours: 5.9, duration: 8 },
-  { title: "The Pedestrian", genre: ["Puzzle", "Indie"], mode: ["Offline"], hours: 5.8, duration: 4 },
-  { title: "Neversong", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 5.7, duration: 4 },
-  { title: "DEATH STRANDING", genre: ["Acción", "Aventura"], mode: ["Offline", "Online"], hours: 5.5, duration: 40 },
-  { title: "Raji: An Ancient Epic", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 5.5, duration: 7 },
-  { title: "Lifeless Planet", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 5.4, duration: 5 },
-  { title: "Jusant", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 4.9, duration: 5 },
-  { title: "INSIDE", genre: ["Plataforma", "Indie"], mode: ["Offline"], hours: 4.8, duration: 3 },
-  { title: "Firewatch", genre: ["Narrativo", "Aventura"], mode: ["Offline"], hours: 4.7, duration: 5 },
-  { title: "PlateUp!", genre: ["Estrategia", "Indie"], mode: ["Offline", "Online"], hours: 4.6, duration: 0 },
-  { title: "The Henry Stickmin Collection", genre: ["Narrativo", "Indie"], mode: ["Offline"], hours: 4.6, duration: 4 },
-  { title: "Arise: A Simple Story", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 4.2, duration: 5 },
-  { title: "GRIS", genre: ["Plataforma", "Indie"], mode: ["Offline"], hours: 4.1, duration: 4 },
-  { title: "Grand Theft Auto: Vice City", genre: ["Acción"], mode: ["Offline"], hours: 3.7, duration: 15 },
-  { title: "Last Day of June", genre: ["Narrativo", "Indie"], mode: ["Offline"], hours: 3.5, duration: 4 },
-  { title: "Little Nightmares", genre: ["Terror", "Plataforma"], mode: ["Offline"], hours: 3.4, duration: 4 },
-  { title: "LIMBO", genre: ["Plataforma", "Indie"], mode: ["Offline"], hours: 3.3, duration: 3 },
-  { title: "Brothers - A Tale of Two Sons", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 3.2, duration: 3 },
-  { title: "Superliminal", genre: ["Puzzle", "Indie"], mode: ["Offline"], hours: 3.1, duration: 3 },
-  { title: "FAR: Lone Sails", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 3, duration: 3 },
-  { title: "Portal", genre: ["Puzzle"], mode: ["Offline"], hours: 2.9, duration: 3 },
-  { title: "Remnant: From the Ashes", genre: ["Shooter", "RPG"], mode: ["Offline", "Online"], hours: 2.8, duration: 20 },
-  { title: "Manifold Garden", genre: ["Puzzle", "Indie"], mode: ["Offline"], hours: 2.4, duration: 3 },
-  { title: "ABZÛ", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 2, duration: 2 },
-  { title: "Green Hell", genre: ["Supervivencia"], mode: ["Offline", "Online"], hours: 2, duration: 30 },
-  { title: "Hogwarts Legacy", genre: ["RPG", "Aventura"], mode: ["Offline"], hours: 1.85, duration: 30 },
-  { title: "HITMAN™ 2", genre: ["Sigilo", "Acción"], mode: ["Offline", "Online"], hours: 1.8, duration: 20 },
-  { title: "BioShock Remastered", genre: ["Shooter", "RPG"], mode: ["Offline"], hours: 1.73, duration: 15 },
-  { title: "What Remains of Edith Finch", genre: ["Narrativo", "Indie"], mode: ["Offline"], hours: 1.73, duration: 2 },
-  { title: "Hellblade: Senua's Sacrifice", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 1.68, duration: 8 },
-  { title: "Metro 2033 Redux", genre: ["Shooter"], mode: ["Offline"], hours: 1.15, duration: 10 },
-  { title: "Far Cry 4", genre: ["Shooter", "Acción"], mode: ["Offline"], hours: 1.06, duration: 18 },
-  { title: "Transistor", genre: ["RPG", "Acción", "Indie"], mode: ["Offline"], hours: 1.05, duration: 5 },
-  { title: "Outer Wilds", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 1.01, duration: 20 },
-  { title: "Skyrim Special Edition", genre: ["RPG", "Aventura"], mode: ["Offline"], hours: 0.81, duration: 60 },
-  { title: "Sonic Mania", genre: ["Plataforma"], mode: ["Offline"], hours: 0.45, duration: 4 },
-  { title: "BioShock Infinite", genre: ["Shooter", "RPG"], mode: ["Offline"], hours: 0, duration: 15 },
-  { title: "BioShock 2 Remastered", genre: ["Shooter", "RPG"], mode: ["Offline"], hours: 0, duration: 12 },
-  { title: "Batman™: Arkham Knight", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 0, duration: 15 },
-  { title: "Borderlands 2", genre: ["Shooter", "RPG"], mode: ["Offline", "Online"], hours: 0, duration: 30 },
-  { title: "DARK SOULS™ III", genre: ["Acción", "RPG"], mode: ["Offline", "Online"], hours: 0, duration: 40 },
-  { title: "Dead Cells", genre: ["Acción", "Plataforma", "Indie"], mode: ["Offline"], hours: 0, duration: 20 },
-  { title: "Dying Light", genre: ["Acción", "Supervivencia"], mode: ["Offline", "Online"], hours: 0, duration: 20 },
-  { title: "Fallout 4", genre: ["RPG", "Shooter"], mode: ["Offline"], hours: 0, duration: 50 },
-  { title: "Fallout: New Vegas", genre: ["RPG", "Shooter"], mode: ["Offline"], hours: 0, duration: 30 },
-  { title: "Fallout 3 GOTY", genre: ["RPG", "Shooter"], mode: ["Offline"], hours: 0, duration: 25 },
-  { title: "Far Cry 5", genre: ["Shooter", "Acción"], mode: ["Offline", "Online"], hours: 0, duration: 18 },
-  { title: "Hades", genre: ["Acción", "RPG", "Indie"], mode: ["Offline"], hours: 0, duration: 30 },
-  { title: "Hollow Knight", genre: ["Plataforma", "Acción", "Indie"], mode: ["Offline"], hours: 0, duration: 40 },
-  { title: "Katana ZERO", genre: ["Acción", "Sigilo", "Indie"], mode: ["Offline"], hours: 0, duration: 4 },
-  { title: "Killing Floor 2", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 0, duration: 0 },
-  { title: "Kingdom Come: Deliverance", genre: ["RPG", "Aventura"], mode: ["Offline"], hours: 0, duration: 50 },
-  { title: "Metro Exodus", genre: ["Shooter"], mode: ["Offline"], hours: 0, duration: 15 },
-  { title: "Metro: Last Light Redux", genre: ["Shooter"], mode: ["Offline"], hours: 0, duration: 10 },
-  { title: "Middle-earth™: Shadow of War™", genre: ["Acción", "RPG"], mode: ["Offline"], hours: 0, duration: 25 },
-  { title: "Mortal Kombat 11", genre: ["Acción"], mode: ["Offline", "Online"], hours: 0, duration: 10 },
-  { title: "NieR:Automata™", genre: ["Acción", "RPG"], mode: ["Offline"], hours: 0, duration: 25 },
-  { title: "Severed Steel", genre: ["Shooter", "Acción"], mode: ["Offline"], hours: 0, duration: 5 },
-  { title: "Shadow of the Tomb Raider", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 0, duration: 15 },
-  { title: "Subnautica", genre: ["Supervivencia", "Aventura"], mode: ["Offline"], hours: 0, duration: 30 },
-  { title: "The Witcher 3: Wild Hunt", genre: ["RPG", "Aventura"], mode: ["Offline"], hours: 0, duration: 60 },
-  { title: "The Witcher 2", genre: ["RPG", "Aventura"], mode: ["Offline"], hours: 0, duration: 30 },
-  { title: "XCOM: Enemy Unknown", genre: ["Estrategia"], mode: ["Offline"], hours: 0, duration: 25 },
-  { title: "Yakuza 0", genre: ["Acción", "RPG"], mode: ["Offline"], hours: 0, duration: 30 },
-  { title: "Dreamscaper", genre: ["Acción", "RPG", "Indie"], mode: ["Offline"], hours: 0, duration: 15 },
-  { title: "Spiritfarer®", genre: ["Indie", "Aventura"], mode: ["Offline", "Online"], hours: 0, duration: 20 },
-  { title: "To the Moon", genre: ["Narrativo", "Indie"], mode: ["Offline"], hours: 0, duration: 5 },
-  { title: "Tell Me Why", genre: ["Narrativo", "Aventura"], mode: ["Offline"], hours: 0, duration: 10 },
-  { title: "Tropico 5", genre: ["Estrategia"], mode: ["Offline", "Online"], hours: 0, duration: 20 },
-  { title: "Sid Meier's Civilization VI", genre: ["Estrategia"], mode: ["Offline", "Online"], hours: 0, duration: 60 },
-  { title: "Jurassic World Evolution", genre: ["Estrategia"], mode: ["Offline"], hours: 0, duration: 20 },
-  { title: "Forza Horizon 4", genre: ["Deportes"], mode: ["Offline", "Online"], hours: 0, duration: 0 },
-  { title: "Grand Theft Auto III", genre: ["Acción"], mode: ["Offline"], hours: 0, duration: 15 },
-  { title: "Grand Theft Auto: San Andreas", genre: ["Acción"], mode: ["Offline"], hours: 0, duration: 30 },
-  { title: "Fallout", genre: ["RPG"], mode: ["Offline"], hours: 0, duration: 15 },
-  { title: "Fallout 2", genre: ["RPG"], mode: ["Offline"], hours: 0, duration: 20 },
-  { title: "Kerbal Space Program", genre: ["Estrategia"], mode: ["Offline"], hours: 0, duration: 0 },
-  { title: "ASTRONEER", genre: ["Supervivencia", "Aventura"], mode: ["Offline", "Online"], hours: 0, duration: 30 },
-  { title: "EVERSPACE™", genre: ["Shooter", "Indie"], mode: ["Offline"], hours: 0, duration: 10 },
+  { title: "FIFA 22", genre: ["Deportes"], mode: ["Offline", "Online"], hours: 642.6, duration: 0, saga: null },
+  { title: "EA SPORTS FC™ 25", genre: ["Deportes"], mode: ["Offline", "Online"], hours: 180.8, duration: 0, saga: null },
+  { title: "NBA 2K20", genre: ["Deportes"], mode: ["Offline", "Online"], hours: 83.4, duration: 0, saga: null },
+  { title: "NBA 2K22", genre: ["Deportes"], mode: ["Offline", "Online"], hours: 67.1, duration: 0, saga: null },
+  { title: "Assassin's Creed Origins", genre: ["Acción", "RPG"], mode: ["Offline"], hours: 38.8, duration: 30, saga: "Assassin's Creed" },
+  { title: "F1 2019", genre: ["Deportes"], mode: ["Offline", "Online"], hours: 29.4, duration: 15, saga: null },
+  { title: "Rise of the Tomb Raider", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 24.4, duration: 18, saga: "Tomb Raider" },
+  { title: "STAR WARS Jedi: La Orden Caída", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 22.3, duration: 18, saga: "Star Wars" },
+  { title: "Celeste", genre: ["Plataforma", "Indie"], mode: ["Offline"], hours: 22.3, duration: 10, saga: null },
+  { title: "Counter-Strike 2", genre: ["Shooter"], mode: ["Online"], hours: 22.1, duration: 0, saga: null },
+  { title: "Just Cause 3", genre: ["Acción"], mode: ["Offline"], hours: 21.8, duration: 15, saga: null },
+  { title: "Ori and the Will of the Wisps", genre: ["Plataforma", "Indie"], mode: ["Offline"], hours: 21.2, duration: 12, saga: "Ori" },
+  { title: "Batman™: Arkham Origins", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 20.9, duration: 12, saga: "Batman Arkham" },
+  { title: "Batman: Arkham City GOTY", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 20.7, duration: 12, saga: "Batman Arkham" },
+  { title: "Black Mesa", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 20.5, duration: 15, saga: null },
+  { title: "Supraland", genre: ["Puzzle", "Aventura"], mode: ["Offline"], hours: 19.8, duration: 12, saga: null },
+  { title: "Mad Max", genre: ["Acción"], mode: ["Offline"], hours: 18.8, duration: 20, saga: null },
+  { title: "Far Cry® 3", genre: ["Shooter", "Acción"], mode: ["Offline"], hours: 18.4, duration: 15, saga: "Far Cry" },
+  { title: "Ori and the Blind Forest: DE", genre: ["Plataforma", "Indie"], mode: ["Offline"], hours: 18.3, duration: 8, saga: "Ori" },
+  { title: "Life is Strange 2", genre: ["Narrativo", "Aventura"], mode: ["Offline"], hours: 17.1, duration: 12, saga: "Life is Strange" },
+  { title: "Life is Strange™", genre: ["Narrativo", "Aventura"], mode: ["Offline"], hours: 16.6, duration: 10, saga: "Life is Strange" },
+  { title: "The Walking Dead", genre: ["Narrativo", "Aventura"], mode: ["Offline"], hours: 13.6, duration: 8, saga: null },
+  { title: "Frostpunk", genre: ["Estrategia", "Supervivencia"], mode: ["Offline"], hours: 12.4, duration: 15, saga: null },
+  { title: "Dishonored", genre: ["Acción", "Sigilo"], mode: ["Offline"], hours: 12.3, duration: 12, saga: null },
+  { title: "Halo: The Master Chief Collection", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 12.2, duration: 40, saga: "Halo" },
+  { title: "Battlefield™ 1", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 12, duration: 8, saga: "Battlefield" },
+  { title: "Batman: Arkham Asylum GOTY", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 11.6, duration: 10, saga: "Batman Arkham" },
+  { title: "Portal 2", genre: ["Puzzle"], mode: ["Offline", "Online"], hours: 11.1, duration: 8, saga: "Portal" },
+  { title: "Heavy Rain", genre: ["Narrativo"], mode: ["Offline"], hours: 10.2, duration: 10, saga: null },
+  { title: "Little Nightmares II", genre: ["Terror", "Plataforma"], mode: ["Offline"], hours: 10, duration: 7, saga: "Little Nightmares" },
+  { title: "Blacksad: Under the Skin", genre: ["Narrativo", "Aventura"], mode: ["Offline"], hours: 10, duration: 8, saga: null },
+  { title: "Cuphead", genre: ["Plataforma", "Indie"], mode: ["Offline", "Online"], hours: 9.9, duration: 10, saga: null },
+  { title: "Battlefield 4™", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 9.7, duration: 8, saga: "Battlefield" },
+  { title: "Mark of the Ninja: Remastered", genre: ["Sigilo", "Acción"], mode: ["Offline"], hours: 9.5, duration: 8, saga: null },
+  { title: "Shadow Tactics: Blades of the Shogun", genre: ["Sigilo", "Estrategia"], mode: ["Offline"], hours: 9.1, duration: 20, saga: null },
+  { title: "DOOM (2016)", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 9, duration: 12, saga: null },
+  { title: "Tomb Raider", genre: ["Acción", "Aventura"], mode: ["Offline", "Online"], hours: 8.7, duration: 12, saga: "Tomb Raider" },
+  { title: "STAR WARS™ Battlefront™ II", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 8.4, duration: 10, saga: "Star Wars" },
+  { title: "Life is Strange: Before the Storm", genre: ["Narrativo", "Aventura"], mode: ["Offline"], hours: 7.8, duration: 6, saga: "Life is Strange" },
+  { title: "Titanfall® 2", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 7.2, duration: 6, saga: null },
+  { title: "The Sims™ 4", genre: ["Estrategia"], mode: ["Offline", "Online"], hours: 7, duration: 0, saga: null },
+  { title: "Ryse: Son of Rome", genre: ["Acción"], mode: ["Offline"], hours: 6.8, duration: 6, saga: null },
+  { title: "Mirror's Edge", genre: ["Acción", "Plataforma"], mode: ["Offline"], hours: 6.4, duration: 6, saga: null },
+  { title: "Bastion", genre: ["Acción", "RPG", "Indie"], mode: ["Offline"], hours: 5.9, duration: 8, saga: null },
+  { title: "The Pedestrian", genre: ["Puzzle", "Indie"], mode: ["Offline"], hours: 5.8, duration: 4, saga: null },
+  { title: "Neversong", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 5.7, duration: 4, saga: null },
+  { title: "DEATH STRANDING", genre: ["Acción", "Aventura"], mode: ["Offline", "Online"], hours: 5.5, duration: 40, saga: null },
+  { title: "Raji: An Ancient Epic", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 5.5, duration: 7, saga: null },
+  { title: "Lifeless Planet", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 5.4, duration: 5, saga: null },
+  { title: "Jusant", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 4.9, duration: 5, saga: null },
+  { title: "INSIDE", genre: ["Plataforma", "Indie"], mode: ["Offline"], hours: 4.8, duration: 3, saga: null },
+  { title: "Firewatch", genre: ["Narrativo", "Aventura"], mode: ["Offline"], hours: 4.7, duration: 5, saga: null },
+  { title: "PlateUp!", genre: ["Estrategia", "Indie"], mode: ["Offline", "Online"], hours: 4.6, duration: 0, saga: null },
+  { title: "The Henry Stickmin Collection", genre: ["Narrativo", "Indie"], mode: ["Offline"], hours: 4.6, duration: 4, saga: null },
+  { title: "Arise: A Simple Story", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 4.2, duration: 5, saga: null },
+  { title: "GRIS", genre: ["Plataforma", "Indie"], mode: ["Offline"], hours: 4.1, duration: 4, saga: null },
+  { title: "Grand Theft Auto: Vice City", genre: ["Acción"], mode: ["Offline"], hours: 3.7, duration: 15, saga: "GTA" },
+  { title: "Last Day of June", genre: ["Narrativo", "Indie"], mode: ["Offline"], hours: 3.5, duration: 4, saga: null },
+  { title: "Little Nightmares", genre: ["Terror", "Plataforma"], mode: ["Offline"], hours: 3.4, duration: 4, saga: "Little Nightmares" },
+  { title: "LIMBO", genre: ["Plataforma", "Indie"], mode: ["Offline"], hours: 3.3, duration: 3, saga: null },
+  { title: "Brothers - A Tale of Two Sons", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 3.2, duration: 3, saga: null },
+  { title: "Superliminal", genre: ["Puzzle", "Indie"], mode: ["Offline"], hours: 3.1, duration: 3, saga: null },
+  { title: "FAR: Lone Sails", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 3, duration: 3, saga: null },
+  { title: "Portal", genre: ["Puzzle"], mode: ["Offline"], hours: 2.9, duration: 3, saga: "Portal" },
+  { title: "Remnant: From the Ashes", genre: ["Shooter", "RPG"], mode: ["Offline", "Online"], hours: 2.8, duration: 20, saga: null },
+  { title: "Manifold Garden", genre: ["Puzzle", "Indie"], mode: ["Offline"], hours: 2.4, duration: 3, saga: null },
+  { title: "ABZÛ", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 2, duration: 2, saga: null },
+  { title: "Green Hell", genre: ["Supervivencia"], mode: ["Offline", "Online"], hours: 2, duration: 30, saga: null },
+  { title: "Hogwarts Legacy", genre: ["RPG", "Aventura"], mode: ["Offline"], hours: 1.85, duration: 30, saga: null },
+  { title: "HITMAN™ 2", genre: ["Sigilo", "Acción"], mode: ["Offline", "Online"], hours: 1.8, duration: 20, saga: null },
+  { title: "BioShock Remastered", genre: ["Shooter", "RPG"], mode: ["Offline"], hours: 1.73, duration: 15, saga: "BioShock" },
+  { title: "What Remains of Edith Finch", genre: ["Narrativo", "Indie"], mode: ["Offline"], hours: 1.73, duration: 2, saga: null },
+  { title: "Hellblade: Senua's Sacrifice", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 1.68, duration: 8, saga: null },
+  { title: "Metro 2033 Redux", genre: ["Shooter"], mode: ["Offline"], hours: 1.15, duration: 10, saga: "Metro" },
+  { title: "Far Cry 4", genre: ["Shooter", "Acción"], mode: ["Offline"], hours: 1.06, duration: 18, saga: "Far Cry" },
+  { title: "Transistor", genre: ["RPG", "Acción", "Indie"], mode: ["Offline"], hours: 1.05, duration: 5, saga: null },
+  { title: "Outer Wilds", genre: ["Aventura", "Indie"], mode: ["Offline"], hours: 1.01, duration: 20, saga: null },
+  { title: "Skyrim Special Edition", genre: ["RPG", "Aventura"], mode: ["Offline"], hours: 0.81, duration: 60, saga: null },
+  { title: "Sonic Mania", genre: ["Plataforma"], mode: ["Offline"], hours: 0.45, duration: 4, saga: null },
+  { title: "BioShock Infinite", genre: ["Shooter", "RPG"], mode: ["Offline"], hours: 0, duration: 15, saga: "BioShock" },
+  { title: "BioShock 2 Remastered", genre: ["Shooter", "RPG"], mode: ["Offline"], hours: 0, duration: 12, saga: "BioShock" },
+  { title: "Batman™: Arkham Knight", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 0, duration: 15, saga: "Batman Arkham" },
+  { title: "Borderlands 2", genre: ["Shooter", "RPG"], mode: ["Offline", "Online"], hours: 0, duration: 30, saga: null },
+  { title: "DARK SOULS™ III", genre: ["Acción", "RPG"], mode: ["Offline", "Online"], hours: 0, duration: 40, saga: null },
+  { title: "Dead Cells", genre: ["Acción", "Plataforma", "Indie"], mode: ["Offline"], hours: 0, duration: 20, saga: null },
+  { title: "Dying Light", genre: ["Acción", "Supervivencia"], mode: ["Offline", "Online"], hours: 0, duration: 20, saga: null },
+  { title: "Fallout 4", genre: ["RPG", "Shooter"], mode: ["Offline"], hours: 0, duration: 50, saga: "Fallout" },
+  { title: "Fallout: New Vegas", genre: ["RPG", "Shooter"], mode: ["Offline"], hours: 0, duration: 30, saga: "Fallout" },
+  { title: "Fallout 3 GOTY", genre: ["RPG", "Shooter"], mode: ["Offline"], hours: 0, duration: 25, saga: "Fallout" },
+  { title: "Far Cry 5", genre: ["Shooter", "Acción"], mode: ["Offline", "Online"], hours: 0, duration: 18, saga: "Far Cry" },
+  { title: "Hades", genre: ["Acción", "RPG", "Indie"], mode: ["Offline"], hours: 0, duration: 30, saga: null },
+  { title: "Hollow Knight", genre: ["Plataforma", "Acción", "Indie"], mode: ["Offline"], hours: 0, duration: 40, saga: null },
+  { title: "Katana ZERO", genre: ["Acción", "Sigilo", "Indie"], mode: ["Offline"], hours: 0, duration: 4, saga: null },
+  { title: "Killing Floor 2", genre: ["Shooter"], mode: ["Offline", "Online"], hours: 0, duration: 0, saga: null },
+  { title: "Kingdom Come: Deliverance", genre: ["RPG", "Aventura"], mode: ["Offline"], hours: 0, duration: 50, saga: null },
+  { title: "Metro Exodus", genre: ["Shooter"], mode: ["Offline"], hours: 0, duration: 15, saga: "Metro" },
+  { title: "Metro: Last Light Redux", genre: ["Shooter"], mode: ["Offline"], hours: 0, duration: 10, saga: "Metro" },
+  { title: "Middle-earth™: Shadow of War™", genre: ["Acción", "RPG"], mode: ["Offline"], hours: 0, duration: 25, saga: null },
+  { title: "Mortal Kombat 11", genre: ["Acción"], mode: ["Offline", "Online"], hours: 0, duration: 10, saga: null },
+  { title: "NieR:Automata™", genre: ["Acción", "RPG"], mode: ["Offline"], hours: 0, duration: 25, saga: null },
+  { title: "Severed Steel", genre: ["Shooter", "Acción"], mode: ["Offline"], hours: 0, duration: 5, saga: null },
+  { title: "Shadow of the Tomb Raider", genre: ["Acción", "Aventura"], mode: ["Offline"], hours: 0, duration: 15, saga: "Tomb Raider" },
+  { title: "Subnautica", genre: ["Supervivencia", "Aventura"], mode: ["Offline"], hours: 0, duration: 30, saga: null },
+  { title: "The Witcher 3: Wild Hunt", genre: ["RPG", "Aventura"], mode: ["Offline"], hours: 0, duration: 60, saga: "The Witcher" },
+  { title: "The Witcher 2", genre: ["RPG", "Aventura"], mode: ["Offline"], hours: 0, duration: 30, saga: "The Witcher" },
+  { title: "XCOM: Enemy Unknown", genre: ["Estrategia"], mode: ["Offline"], hours: 0, duration: 25, saga: null },
+  { title: "Yakuza 0", genre: ["Acción", "RPG"], mode: ["Offline"], hours: 0, duration: 30, saga: null },
+  { title: "Dreamscaper", genre: ["Acción", "RPG", "Indie"], mode: ["Offline"], hours: 0, duration: 15, saga: null },
+  { title: "Spiritfarer®", genre: ["Indie", "Aventura"], mode: ["Offline", "Online"], hours: 0, duration: 20, saga: null },
+  { title: "To the Moon", genre: ["Narrativo", "Indie"], mode: ["Offline"], hours: 0, duration: 5, saga: null },
+  { title: "Tell Me Why", genre: ["Narrativo", "Aventura"], mode: ["Offline"], hours: 0, duration: 10, saga: null },
+  { title: "Tropico 5", genre: ["Estrategia"], mode: ["Offline", "Online"], hours: 0, duration: 20, saga: null },
+  { title: "Sid Meier's Civilization VI", genre: ["Estrategia"], mode: ["Offline", "Online"], hours: 0, duration: 60, saga: null },
+  { title: "Jurassic World Evolution", genre: ["Estrategia"], mode: ["Offline"], hours: 0, duration: 20, saga: null },
+  { title: "Forza Horizon 4", genre: ["Deportes"], mode: ["Offline", "Online"], hours: 0, duration: 0, saga: null },
+  { title: "Grand Theft Auto III", genre: ["Acción"], mode: ["Offline"], hours: 0, duration: 15, saga: "GTA" },
+  { title: "Grand Theft Auto: San Andreas", genre: ["Acción"], mode: ["Offline"], hours: 0, duration: 30, saga: "GTA" },
+  { title: "Fallout", genre: ["RPG"], mode: ["Offline"], hours: 0, duration: 15, saga: "Fallout" },
+  { title: "Fallout 2", genre: ["RPG"], mode: ["Offline"], hours: 0, duration: 20, saga: "Fallout" },
+  { title: "Kerbal Space Program", genre: ["Estrategia"], mode: ["Offline"], hours: 0, duration: 0, saga: null },
+  { title: "ASTRONEER", genre: ["Supervivencia", "Aventura"], mode: ["Offline", "Online"], hours: 0, duration: 30, saga: null },
+  { title: "EVERSPACE™", genre: ["Shooter", "Indie"], mode: ["Offline"], hours: 0, duration: 10, saga: null },
 ];
 
 function getDurationLabel(d) {
@@ -501,18 +578,61 @@ function updateStats(filtered) {
   document.getElementById("stat-hours").textContent = Math.round(totalHours).toLocaleString("es-AR") + "h";
 }
 
+function getChecked(dropdownId) {
+  return [...document.querySelectorAll(`#${dropdownId} input[type=checkbox]:checked`)].map(c => c.value);
+}
+
+function updateTrigger(triggerId, values, emptyLabel) {
+  const trigger = document.getElementById(triggerId);
+  const badge = trigger.querySelector(".ms-badge");
+  if (badge) badge.remove();
+  if (values.length === 0) {
+    trigger.childNodes[0].textContent = emptyLabel + " ";
+  } else {
+    trigger.childNodes[0].textContent = values.length === 1 ? values[0] + " " : `${values.length} seleccionados `;
+    const b = document.createElement("span");
+    b.className = "ms-badge";
+    b.textContent = values.length;
+    trigger.appendChild(b);
+  }
+}
+
+function setupMultiSelect(triggerId, dropdownId) {
+  const trigger = document.getElementById(triggerId);
+  const dropdown = document.getElementById(dropdownId);
+  trigger.addEventListener("click", e => {
+    e.stopPropagation();
+    trigger.classList.toggle("active");
+    dropdown.classList.toggle("open");
+  });
+  dropdown.querySelectorAll("input[type=checkbox]").forEach(cb => {
+    cb.addEventListener("change", () => render());
+  });
+}
+
+document.addEventListener("click", () => {
+  document.querySelectorAll(".ms-dropdown.open").forEach(d => d.classList.remove("open"));
+  document.querySelectorAll(".ms-trigger.active").forEach(t => t.classList.remove("active"));
+});
+
 function render() {
   const q = document.getElementById("search").value.toLowerCase().trim();
-  const genreF = document.getElementById("genre").value;
+  const genreF = getChecked("genre-dropdown");
   const modeF = document.getElementById("mode").value;
-  const durF = document.getElementById("duration").value;
+  const durF = getChecked("duration-dropdown");
+  const sagaF = document.getElementById("saga").value;
   const playedF = document.getElementById("played").value;
+
+  updateTrigger("genre-trigger", genreF, "Todos los géneros");
+  updateTrigger("duration-trigger", durF, "Cualquiera");
 
   const filtered = games.filter(g => {
     if (q && !g.title.toLowerCase().includes(q)) return false;
-    if (genreF && !g.genre.includes(genreF)) return false;
+    if (genreF.length > 0 && !genreF.some(f => g.genre.includes(f))) return false;
     if (modeF && !g.mode.includes(modeF)) return false;
-    if (durF && getDurationBucket(g.duration) !== durF) return false;
+    if (durF.length > 0 && !durF.includes(getDurationBucket(g.duration))) return false;
+    if (sagaF === "si" && !g.saga) return false;
+    if (sagaF === "no" && g.saga) return false;
     if (playedF === "jugado" && g.hours === 0) return false;
     if (playedF === "nojugado" && g.hours > 0) return false;
     return true;
@@ -539,6 +659,7 @@ function render() {
         <span class="badge badge-genre">${g.genre[0]}</span>
         ${g.mode.map(m => `<span class="badge ${m === 'Offline' ? 'badge-offline' : 'badge-online'}">${m}</span>`).join("")}
         ${dur ? `<span class="badge badge-duration">${dur}</span>` : ""}
+        ${g.saga ? `<span class="badge badge-saga">${g.saga}</span>` : ""}
         ${isPlayed
           ? `<span class="badge badge-played">${g.hours.toFixed(0)}h jugadas</span>`
           : `<span class="badge badge-unplayed">Sin jugar</span>`}
@@ -547,9 +668,11 @@ function render() {
   }).join("");
 }
 
-["search", "genre", "mode", "duration", "played"].forEach(id => {
-  const el = document.getElementById(id);
-  el.addEventListener(id === "search" ? "input" : "change", render);
+setupMultiSelect("genre-trigger", "genre-dropdown");
+setupMultiSelect("duration-trigger", "duration-dropdown");
+
+["search", "mode", "saga", "played"].forEach(id => {
+  document.getElementById(id).addEventListener(id === "search" ? "input" : "change", render);
 });
 
 render();
