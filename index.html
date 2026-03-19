@@ -256,65 +256,53 @@
     margin-bottom: 0.5rem;
   }
 
-  /* Multi-select */
-  .multi-select { position: relative; min-width: 160px; }
-  .ms-trigger {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 13px;
-    padding: 6px 10px;
-    height: 34px;
-    cursor: pointer;
+  /* Chip filters */
+  .filters-bar {
+    padding: 1rem 2rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: rgba(13, 15, 20, 0.97);
+    backdrop-filter: blur(12px);
+    z-index: 100;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .filter-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .filter-row input {
+    background: var(--surface); border: 1px solid var(--border2); border-radius: 6px;
+    color: var(--text); font-family: var(--font-body); font-size: 13px;
+    padding: 5px 10px; height: 32px; outline: none; flex: 1; min-width: 160px;
     transition: border-color 0.15s;
-    user-select: none;
   }
-  .ms-trigger:hover { border-color: var(--accent); }
-  .ms-trigger.active { border-color: var(--accent); }
-  .ms-arrow { font-size: 10px; color: var(--muted); transition: transform 0.15s; }
-  .ms-trigger.active .ms-arrow { transform: rotate(180deg); }
-  .ms-dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    min-width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: 8px;
-    padding: 6px 0;
-    z-index: 200;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  .filter-row input:focus { border-color: var(--accent); }
+  .filter-row input::placeholder { color: var(--muted); }
+  .selects-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .selects-row select {
+    background: var(--surface); border: 1px solid var(--border2); border-radius: 6px;
+    color: var(--text); font-family: var(--font-body); font-size: 13px;
+    padding: 5px 28px 5px 10px; height: 32px; outline: none;
+    appearance: none; -webkit-appearance: none; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a8099' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center;
+    transition: border-color 0.15s;
   }
-  .ms-dropdown.open { display: block; }
-  .ms-option {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 12px;
-    font-size: 13px;
-    color: var(--text);
-    cursor: pointer;
-    transition: background 0.1s;
+  .selects-row select:focus { border-color: var(--accent); }
+  .chip-section { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .chip-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); white-space: nowrap; min-width: 50px; }
+  .chip-group { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-size: 12px; padding: 4px 12px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.13); color: var(--muted);
+    background: var(--surface); cursor: pointer; transition: all 0.15s;
+    user-select: none; font-family: var(--font-body);
   }
-  .ms-option:hover { background: rgba(255,255,255,0.05); }
-  .ms-option input[type=checkbox] { accent-color: var(--accent); width: 13px; height: 13px; cursor: pointer; }
-  .ms-badge {
-    display: inline-block;
-    background: var(--accent);
-    color: #000;
-    font-size: 10px;
-    font-weight: 600;
-    border-radius: 10px;
-    padding: 1px 6px;
-    margin-left: 2px;
-  }
+  .chip:hover { border-color: rgba(255,255,255,0.3); color: var(--text); }
+  .chip.active { background: rgba(77,159,255,0.15); border-color: #4d9fff; color: #7cb8ff; }
+  .chip.chip-green.active { background: rgba(200,255,62,0.1); border-color: rgba(200,255,62,0.6); color: #b8e836; }
+  .results-count { font-size: 12px; color: var(--muted); white-space: nowrap; margin-left: auto; }
+  .results-count strong { color: var(--accent2); }
 
 
   @keyframes fadeUp {
@@ -360,68 +348,54 @@
 </header>
 
 <div class="filters-bar">
-  <div class="filter-group">
-    <label>Buscar</label>
-    <input type="text" id="search" placeholder="Nombre del juego...">
-  </div>
-  <div class="filter-group">
-    <label>Género</label>
-    <div class="multi-select" id="genre-multi">
-      <div class="ms-trigger" id="genre-trigger">Todos los géneros <span class="ms-arrow">▾</span></div>
-      <div class="ms-dropdown" id="genre-dropdown">
-        <label class="ms-option"><input type="checkbox" value="Shooter"> Shooter</label>
-        <label class="ms-option"><input type="checkbox" value="Acción"> Acción</label>
-        <label class="ms-option"><input type="checkbox" value="Aventura"> Aventura</label>
-        <label class="ms-option"><input type="checkbox" value="RPG"> RPG</label>
-        <label class="ms-option"><input type="checkbox" value="Plataforma"> Plataforma</label>
-        <label class="ms-option"><input type="checkbox" value="Puzzle"> Puzzle</label>
-        <label class="ms-option"><input type="checkbox" value="Estrategia"> Estrategia</label>
-        <label class="ms-option"><input type="checkbox" value="Narrativo"> Narrativo</label>
-        <label class="ms-option"><input type="checkbox" value="Deportes"> Deportes</label>
-        <label class="ms-option"><input type="checkbox" value="Sigilo"> Sigilo</label>
-        <label class="ms-option"><input type="checkbox" value="Terror"> Terror</label>
-        <label class="ms-option"><input type="checkbox" value="Supervivencia"> Supervivencia</label>
-        <label class="ms-option"><input type="checkbox" value="Indie"> Indie</label>
-      </div>
+  <div class="filter-row">
+    <input type="text" id="search" placeholder="Buscar juego...">
+    <div class="selects-row">
+      <select id="mode">
+        <option value="">Modo: todos</option>
+        <option value="Offline">Offline</option>
+        <option value="Online">Online</option>
+      </select>
+      <select id="saga">
+        <option value="">Saga: todas</option>
+        <option value="si">Solo sagas</option>
+        <option value="no">Sin saga</option>
+      </select>
+      <select id="played">
+        <option value="">Estado: todos</option>
+        <option value="jugado">Ya jugué</option>
+        <option value="nojugado">Sin jugar</option>
+      </select>
+      <div class="results-count" id="results-count"></div>
     </div>
   </div>
-  <div class="filter-group">
-    <label>Modo</label>
-    <select id="mode">
-      <option value="">Todos</option>
-      <option value="Offline">Offline</option>
-      <option value="Online">Online/Multijugador</option>
-    </select>
-  </div>
-  <div class="filter-group">
-    <label>Duración</label>
-    <div class="multi-select" id="duration-multi">
-      <div class="ms-trigger" id="duration-trigger">Cualquiera <span class="ms-arrow">▾</span></div>
-      <div class="ms-dropdown" id="duration-dropdown">
-        <label class="ms-option"><input type="checkbox" value="short"> Corto — &minus;10hs</label>
-        <label class="ms-option"><input type="checkbox" value="medium"> Medio — 10 a 20hs</label>
-        <label class="ms-option"><input type="checkbox" value="long"> Largo — 20 a 50hs</label>
-        <label class="ms-option"><input type="checkbox" value="verylong"> Muy largo — 50hs+</label>
-      </div>
+  <div class="chip-section">
+    <span class="chip-label">Género</span>
+    <div class="chip-group" id="genre-chips">
+      <div class="chip" data-value="Shooter">Shooter</div>
+      <div class="chip" data-value="Acción">Acción</div>
+      <div class="chip" data-value="Aventura">Aventura</div>
+      <div class="chip" data-value="RPG">RPG</div>
+      <div class="chip" data-value="Plataforma">Plataforma</div>
+      <div class="chip" data-value="Puzzle">Puzzle</div>
+      <div class="chip" data-value="Estrategia">Estrategia</div>
+      <div class="chip" data-value="Narrativo">Narrativo</div>
+      <div class="chip" data-value="Deportes">Deportes</div>
+      <div class="chip" data-value="Sigilo">Sigilo</div>
+      <div class="chip" data-value="Terror">Terror</div>
+      <div class="chip" data-value="Supervivencia">Supervivencia</div>
+      <div class="chip" data-value="Indie">Indie</div>
     </div>
   </div>
-  <div class="filter-group">
-    <label>Saga</label>
-    <select id="saga">
-      <option value="">Todo</option>
-      <option value="si">Sí — solo sagas</option>
-      <option value="no">No — sin saga</option>
-    </select>
+  <div class="chip-section">
+    <span class="chip-label">Duración</span>
+    <div class="chip-group" id="duration-chips">
+      <div class="chip chip-green" data-value="short">−10hs</div>
+      <div class="chip chip-green" data-value="medium">10–20hs</div>
+      <div class="chip chip-green" data-value="long">20–50hs</div>
+      <div class="chip chip-green" data-value="verylong">50hs+</div>
+    </div>
   </div>
-  <div class="filter-group">
-    <label>Estado</label>
-    <select id="played">
-      <option value="">Todos</option>
-      <option value="jugado">Ya jugué</option>
-      <option value="nojugado">Sin jugar</option>
-    </select>
-  </div>
-  <div class="results-count" id="results-count"></div>
 </div>
 
 <main>
@@ -578,53 +552,17 @@ function updateStats(filtered) {
   document.getElementById("stat-hours").textContent = Math.round(totalHours).toLocaleString("es-AR") + "h";
 }
 
-function getChecked(dropdownId) {
-  return [...document.querySelectorAll(`#${dropdownId} input[type=checkbox]:checked`)].map(c => c.value);
+function getActiveChips(groupId) {
+  return [...document.querySelectorAll(`#${groupId} .chip.active`)].map(c => c.dataset.value);
 }
-
-function updateTrigger(triggerId, values, emptyLabel) {
-  const trigger = document.getElementById(triggerId);
-  const badge = trigger.querySelector(".ms-badge");
-  if (badge) badge.remove();
-  if (values.length === 0) {
-    trigger.childNodes[0].textContent = emptyLabel + " ";
-  } else {
-    trigger.childNodes[0].textContent = values.length === 1 ? values[0] + " " : `${values.length} seleccionados `;
-    const b = document.createElement("span");
-    b.className = "ms-badge";
-    b.textContent = values.length;
-    trigger.appendChild(b);
-  }
-}
-
-function setupMultiSelect(triggerId, dropdownId) {
-  const trigger = document.getElementById(triggerId);
-  const dropdown = document.getElementById(dropdownId);
-  trigger.addEventListener("click", e => {
-    e.stopPropagation();
-    trigger.classList.toggle("active");
-    dropdown.classList.toggle("open");
-  });
-  dropdown.querySelectorAll("input[type=checkbox]").forEach(cb => {
-    cb.addEventListener("change", () => render());
-  });
-}
-
-document.addEventListener("click", () => {
-  document.querySelectorAll(".ms-dropdown.open").forEach(d => d.classList.remove("open"));
-  document.querySelectorAll(".ms-trigger.active").forEach(t => t.classList.remove("active"));
-});
 
 function render() {
   const q = document.getElementById("search").value.toLowerCase().trim();
-  const genreF = getChecked("genre-dropdown");
+  const genreF = getActiveChips("genre-chips");
   const modeF = document.getElementById("mode").value;
-  const durF = getChecked("duration-dropdown");
+  const durF = getActiveChips("duration-chips");
   const sagaF = document.getElementById("saga").value;
   const playedF = document.getElementById("played").value;
-
-  updateTrigger("genre-trigger", genreF, "Todos los géneros");
-  updateTrigger("duration-trigger", durF, "Cualquiera");
 
   const filtered = games.filter(g => {
     if (q && !g.title.toLowerCase().includes(q)) return false;
@@ -639,12 +577,9 @@ function render() {
   });
 
   updateStats(filtered);
-
-  const count = document.getElementById("results-count");
-  count.innerHTML = `<strong>${filtered.length}</strong> de ${games.length} juegos`;
+  document.getElementById("results-count").innerHTML = `<strong>${filtered.length}</strong> de ${games.length} juegos`;
 
   const grid = document.getElementById("grid");
-
   if (filtered.length === 0) {
     grid.innerHTML = '<div class="no-results"><strong>0</strong>Sin resultados con esos filtros.</div>';
     return;
@@ -668,8 +603,9 @@ function render() {
   }).join("");
 }
 
-setupMultiSelect("genre-trigger", "genre-dropdown");
-setupMultiSelect("duration-trigger", "duration-dropdown");
+document.querySelectorAll(".chip").forEach(chip => {
+  chip.addEventListener("click", () => { chip.classList.toggle("active"); render(); });
+});
 
 ["search", "mode", "saga", "played"].forEach(id => {
   document.getElementById(id).addEventListener(id === "search" ? "input" : "change", render);
